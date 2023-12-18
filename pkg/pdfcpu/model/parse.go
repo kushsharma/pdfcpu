@@ -739,6 +739,11 @@ func parseIndRef(s, l, l1 string, line *string, i, i2 int, rangeErr bool) (types
 func parseFloat(s string) (types.Object, error) {
 	f, err := strconv.ParseFloat(s, 64)
 	if err != nil {
+		if strings.EqualFold(s, "#NAN") {
+			// on NAN don't fail and gracefully accept 0 as we don't know
+			// how to handle the failure
+			return types.Float(0), nil
+		}
 		return nil, err
 	}
 
